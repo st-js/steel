@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.st-js.steel</groupId>
+	<artifactId>steel-example</artifactId>
+	<packaging>pom</packaging>
+	<name>Steel JS : Example</name>
+
+	<parent>
+		<groupId>org.st-js.steel</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.st-js.steel</groupId>
+			<artifactId>steel-mvc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- STJS -->
+			<plugin>
+				<groupId>org.st-js</groupId>
+				<artifactId>stjs-maven-plugin</artifactId>
+				<version>${stjs.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+							<goal>generate-test</goal>
+							<goal>copy-js</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<generateSourceMap>true</generateSourceMap>
+					<pack>true</pack>
+				</configuration>
+			</plugin>
+
+			<!-- jetty -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.0.v20120127</version>
+				<configuration>
+					<webAppConfig>
+						<contextPath>/examples</contextPath>
+						<baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+							<resourcesAsCSV>src/main/webapp,target/${project.artifactId}-${project.version}</resourcesAsCSV>
+						</baseResource>
+					</webAppConfig>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- configuration for maven plugin 1.0.0 for automatic code generation -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.st-js</groupId>
+										<artifactId>
+											maven-plugin
+										</artifactId>
+										<versionRange>
+											[${stjs.version},)
+										</versionRange>
+										<goals>
+											<goal>generate</goal>
+											<goal>generate-test</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+
+
+		</pluginManagement>
+
+
+	</build>
+
+
+</project>
