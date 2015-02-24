@@ -25,10 +25,41 @@ public class MyTestComponent {
 
 	}
 
+	private public void todo() {
+		TodoCSS css;
+		section(
+			css,//
+			header(css.header,//
+				h1("todos"),//
+				inputText().placeholder("text")), //
+			section(css.main,//
+				checkbox(css.main.markAll).value(model.allChecked).change(val -> this::markAll),//
+				label().$for(), //
+				ul(css.main.list, () -> {
+				}, //
+					inputText(css.main.edit).escape(this::revertEditing).blur(this::doneEditing).focus(this::edit))).show(
+				() -> model.todos.$length > 0));
+	}
+
 	//	public void test() {
 	//		model.observe((obj, field, value) -> {//
 	//		});
 	//	}
+
+	private Object label() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Object inputText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Object h1(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	public static void dotest() {
 		MyTestModel model = new MyTestModel();

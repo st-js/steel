@@ -4,10 +4,12 @@ import org.steel.model.Model;
 import org.stjs.javascript.annotation.Template;
 
 public class MyTestModel extends Model {
-	@Template("setter")
+	@Template("property")
 	public String value;
 
-	@Template("setter")
+	@Template("property")
 	public int counter = 0;
+
+	public Object allChecked;
 
 }

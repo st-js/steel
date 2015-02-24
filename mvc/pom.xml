@@ -51,6 +51,18 @@
 					<pack>true</pack>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<STJS-Library>true</STJS-Library>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -66,7 +78,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.st-js</groupId>
 										<artifactId>
-											maven-plugin
+											stjs-maven-plugin
 										</artifactId>
 										<versionRange>
 											[${stjs.version},)
