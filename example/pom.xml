@@ -14,6 +14,10 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<jetty.version>9.1.2.v20140210</jetty.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.st-js.steel</groupId>
@@ -45,9 +49,9 @@
 
 			<!-- jetty -->
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.0.v20120127</version>
+				<version>${jetty.version}</version>
 				<configuration>
 					<webAppConfig>
 						<contextPath>/examples</contextPath>
@@ -56,6 +60,13 @@
 						</baseResource>
 					</webAppConfig>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.ow2.asm</groupId>
+						<artifactId>asm</artifactId>
+						<version>5.0_BETA</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 		<pluginManagement>
