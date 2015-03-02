@@ -25,6 +25,7 @@ public class MyTestComponent {
 
 	}
 
+	/*
 	private public void todo() {
 		TodoCSS css;
 		section(
@@ -40,7 +41,7 @@ public class MyTestComponent {
 					inputText(css.main.edit).escape(this::revertEditing).blur(this::doneEditing).focus(this::edit))).show(
 				() -> model.todos.$length > 0));
 	}
-
+	*/
 	//	public void test() {
 	//		model.observe((obj, field, value) -> {//
 	//		});

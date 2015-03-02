@@ -1,9 +1,8 @@
 package org.steel.example;
 
-import org.steel.model.Model;
 import org.stjs.javascript.annotation.Template;
 
-public class MyTestModel extends Model {
+public class MyTestModel {
 	@Template("property")
 	public String value;
 

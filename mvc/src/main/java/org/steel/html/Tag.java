@@ -66,7 +66,7 @@ public class Tag {
 		return this;
 	}
 
-	private void modelUpdate(Model model, String field, Object value) {
+	private void modelUpdate(Object model, String field, Object value) {
 		//TODO here filter the expressions depending on the field
 		expressions.$forEach(expr -> expr.update(rootContext));
 	}
