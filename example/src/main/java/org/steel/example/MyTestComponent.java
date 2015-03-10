@@ -5,19 +5,35 @@ import static org.steel.html.HTML.expr;
 import static org.steel.html.HTML.span;
 import static org.stjs.javascript.JSCollections.$map;
 
+import org.steel.model.Observables;
+import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.jquery.JQueryCore;
 
 public class MyTestComponent {
-	private MyModel model;
+	@Template("property")
+	public String firstName;
 
-	public MyTestComponent(MyModel model) {
-		this.model = model;
+	@Template("property")
+	public String lastName;
+
+	@Template("property")
+	public String title;
+
+	@Template("property")
+	public int counter = 0;
+
+	public MyTestComponent() {
+		Observables.model(this);
+	}
+
+	public String name() {
+		return firstName + " " + lastName;
 	}
 
 	public void render(JQueryCore<?> container) {
 		div(//
 			div("a div"), //
-			span("Time:", expr(() -> this.model.name() + "=" + this.model.counter))//
+			span("Time:", expr(() -> name() + "=" + counter))//
 		).appendTo(container).$.css($map("position", "absolute", "top", "0", "left", "0"));
 	}
 

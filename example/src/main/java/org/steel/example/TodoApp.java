@@ -10,13 +10,14 @@ public class TodoApp {
 		console.info("STARTED");
 
 		$(window.document).ready((ev, THIS) -> {
-			MyModel model = new MyModel();
-			MyTestComponent comp = new MyTestComponent(model);
+			MyTestComponent comp = new MyTestComponent();
+			comp.firstName = "first";
+			comp.lastName = "last";
 			comp.render($("body"));
 
 			setInterval(() -> {
 				//model.value = "seconds:" + new Date();
-				model.counter++;
+				comp.counter++;
 			}, 1000);
 
 			return false;
