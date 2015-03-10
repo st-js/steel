@@ -2,12 +2,12 @@ package org.steel.html;
 
 import static org.stjs.javascript.JSCollections.$array;
 import static org.stjs.javascript.JSCollections.$castArray;
-import static org.stjs.javascript.JSObjectAdapter.$properties;
 
-import org.steel.model.DynamicExpr;
+import org.steel.model.DynExpr;
 import org.stjs.javascript.Array;
+import org.stjs.javascript.functions.Function0;
 
-public class HTML extends HTMLBridge {
+public class HTML {
 	/**
 	 * usage: [cssRule], [tags, text, expr]*
 	 * @param arguments
@@ -31,6 +31,10 @@ public class HTML extends HTMLBridge {
 		return ret;
 	}
 
+	public static <T> DynExpr<T> expr(Function0<T> e) {
+		return DynExpr.of(e);
+	}
+
 	public static Tag tag(String tagName, Array<Object> args) {
 		//console.info("TAG", args);
 		Tag tag = new Tag(tagName);
@@ -38,8 +42,8 @@ public class HTML extends HTMLBridge {
 			Object arg = args.$get(i);
 			if (arg instanceof Tag) {
 				tag.tag((Tag) arg);
-			} else if (arg instanceof DynamicExpr) {
-				tag.expr((DynamicExpr) arg);
+			} else if (arg instanceof DynExpr) {
+				tag.expr((DynExpr<?>) arg);
 			} else {
 				tag.text((String) arg);
 			}
@@ -47,12 +51,4 @@ public class HTML extends HTMLBridge {
 		return tag;
 	}
 
-	protected static DynamicExpr realExpr(String location, String exprText, Object value) {
-		return new DynamicExpr(value, exprText);
-	}
-
-	static {
-		$properties(HTML.class).$put("expr", $properties(HTML.class).$get("realExpr"));
-		//$properties(HTMLBridge.class).$put("expr", $properties(HTML.class).$get("realExpr"));
-	}
 }

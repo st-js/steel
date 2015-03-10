@@ -1,10 +1,8 @@
 package org.steel.model;
 
-import static org.stjs.javascript.Global.console;
 import static org.stjs.javascript.JSCollections.$map;
 
 import org.stjs.javascript.Map;
-import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.functions.Callback1;
 import org.stjs.javascript.functions.Function0;
 
@@ -55,24 +53,4 @@ public class DynExpr<T> {
 		this.observer = callback;
 	}
 
-	public static class MyModel {
-		@Template("property")
-		public String firstName;
-		@Template("property")
-		public String lastName;
-		@Template("property")
-		public String title;
-
-		public String name() {
-			return firstName + " " + lastName;
-		}
-	}
-
-	public static void main(String[] args) {
-		MyModel model = Observables.model(new MyModel());
-
-		DynExpr.of(() -> model.name()).observe((expr) -> console.info("NEW value:" + expr.value()));
-
-		model.firstName = "a";
-	}
 }
