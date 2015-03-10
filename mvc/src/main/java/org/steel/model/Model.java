@@ -20,6 +20,7 @@ public class Model {
 		this.tracer = tracer;
 		this.id = id;
 		observers = $array();
+
 	}
 
 	public Object set(String field, Object value) {
@@ -31,7 +32,7 @@ public class Model {
 	public Object get(String field) {
 		Object value = $properties(target).$get(field);
 		if (tracer != null) {
-			tracer.$invoke(value, field);
+			tracer.$invoke(target, field);
 		}
 		return value;
 	}

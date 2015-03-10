@@ -1,5 +1,6 @@
 package org.steel.model;
 
+import static org.stjs.javascript.JSObjectAdapter.$js;
 import static org.stjs.javascript.JSObjectAdapter.$properties;
 
 import org.stjs.javascript.functions.Callback2;
@@ -34,10 +35,15 @@ public class Observables {
 			modelSequence++;
 			m = new Model(model, modelSequence + "", Observables::traceRelay);
 			$properties(model).$put(MODEL_PROPERTY, m);
+			$properties(model).$put("set", modelSet);
+			$properties(model).$put("get", modelGet);
 			return m;
 		}
 		return m;
 	}
+
+	private static Object modelSet = $js("function(field, value) { return this.$$model.set(field, value);}");
+	private static Object modelGet = $js("function(field) { return this.$$model.get(field);}");
 
 	public static void observe(Object model, Callback3<Object, String, Object> observer) {
 		getModel(model).observe(observer);

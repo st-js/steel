@@ -4,18 +4,21 @@ import static org.stjs.javascript.JSCollections.$map;
 
 import org.stjs.javascript.Map;
 import org.stjs.javascript.functions.Callback1;
+import org.stjs.javascript.functions.Callback3;
 import org.stjs.javascript.functions.Function0;
 
 public class DynExpr<T> {
 	private final Function0<T> expr;
 	private Callback1<DynExpr<T>> observer;
-	private final Map<String, Object> tracedFields;
-	private final Map<String, Object> tracedModels;
+	private Map<String, Object> tracedFields;
+	private Map<String, Object> tracedModels;
+	private Callback3<Object, String, Object> modelModifiedCallback;
 
 	private DynExpr(Function0<T> expr) {
 		this.expr = expr;
 		tracedFields = $map();
 		tracedModels = $map();
+		modelModifiedCallback = this::onModelModified;
 	}
 
 	public static <T> DynExpr<T> of(Function0<T> expr) {
@@ -23,6 +26,11 @@ public class DynExpr<T> {
 	}
 
 	public T value() {
+		for (String key : tracedModels) {
+			Observables.unobserve(tracedModels.$get(key), modelModifiedCallback);
+		}
+		tracedFields = $map();
+		tracedModels = $map();
 		return Observables.trace(this::trace, expr);
 	}
 
@@ -32,7 +40,7 @@ public class DynExpr<T> {
 			return;
 		}
 		if (tracedModels.$get(Observables.id(model)) == null) {
-			Observables.observe(model, this::onModelModified);
+			Observables.observe(model, modelModifiedCallback);
 			tracedModels.$put(Observables.id(model), model);
 		}
 		tracedFields.$put(key, model);
@@ -43,13 +51,13 @@ public class DynExpr<T> {
 		if (tracedFields.$get(key) == null) {
 			return;
 		}
-		//TODO accumulate changes and call async
+		// TODO accumulate changes and call async
 		observer.$invoke(this);
 	}
 
 	public void observe(Callback1<DynExpr<T>> callback) {
 		value();
-		//TODO multiple observers !?
+		// TODO multiple observers !?
 		this.observer = callback;
 	}
 
