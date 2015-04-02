@@ -1,10 +1,5 @@
 package org.steel.example;
 
-import static org.steel.html.HTML.div;
-import static org.steel.html.HTML.expr;
-import static org.steel.html.HTML.span;
-import static org.stjs.javascript.JSCollections.$map;
-
 import org.steel.model.Observables;
 import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.jquery.JQueryCore;
@@ -31,10 +26,10 @@ public class MyTestComponent {
 	}
 
 	public void render(JQueryCore<?> container) {
-		div(//
-			div("a div"), //
-			span("Time:", expr(() -> name() + "=" + counter))//
-		).appendTo(container).$.css($map("position", "absolute", "top", "0", "left", "0"));
+		//		div(//
+		//			div("a div"), //
+		//			span("Time:", expr(() -> name() + "=" + counter))//
+		//		).appendTo(container).$.css($map("position", "absolute", "top", "0", "left", "0"));
 	}
 
 	/*

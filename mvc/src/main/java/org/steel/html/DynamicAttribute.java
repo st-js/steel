@@ -1,16 +1,17 @@
 package org.steel.html;
 
-import static org.stjs.javascript.Global.window;
+import static org.stjs.javascript.JSObjectAdapter.$properties;
 
 import org.steel.model.DynExpr;
 import org.stjs.javascript.dom.Element;
-import org.stjs.javascript.dom.Text;
 
-public class DynamicTextNode {
-	private Text textNode;
+public class DynamicAttribute {
+	private Element element;
 	private final DynExpr<?> expr;
+	private final String name;
 
-	public DynamicTextNode(DynExpr<?> expr) {
+	public DynamicAttribute(String name, DynExpr<?> expr) {
+		this.name = name;
 		this.expr = expr;
 		expr.observe(e -> update());
 	}
@@ -25,12 +26,11 @@ public class DynamicTextNode {
 		return value != null ? value.toString() : "";
 	}
 
-	public void appendTo(Element domElement) {
-		textNode = window.document.createTextNode(getTextValue());
-		domElement.appendChild(textNode);
+	public void setTo(Element anElement) {
+		this.element = anElement;
 	}
 
 	public void update() {
-		textNode.textContent = getTextValue();
+		$properties(element).$put(name, getTextValue());
 	}
 }

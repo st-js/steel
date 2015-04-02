@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<!-- Jquery -->
+<script src="//cdn.jsdelivr.net/jquery/2.1.0/jquery.min.js"></script>
+<script src="//cdn.jsdelivr.net/angularjs/1.2.15/angular.min.js"></script>
+<script src="//cdn.jsdelivr.net/knockout/3.1.0/knockout.js"></script>
+<script src="//cdn.jsdelivr.net/handlebarsjs/1.3.0/handlebars.js"></script>
+<script src="//cdn.jsdelivr.net/emberjs/1.5.0/ember.min.js"></script>
+<script src="//cdn.jsdelivr.net/react/0.10.0/react-with-addons.js"></script>
+<script src="//cdn.jsdelivr.net/mithril/0.1.9/mithril.min.js"></script>
+
+
+<script src="stjs.js"></script>
+<script src="observe.js"></script>
+<script src="generated-js/steel-mvc.js"></script>
+<script src="generated-js/steel-example.js"></script>
+
+<!-- Angular -->
+<div ng-app>
+  Angular:
+  <span ng-controller="Ctrl" id="angList"><span ng-repeat="item in data">{{item}}</span></span>
+</div>
+
+
+<!-- Knockout -->
+<div id="koapp">
+  Knockout:
+  <span data-bind="foreach: data"><span data-bind="text: $data"></span></span>
+</div>
+
+<!-- Ember -->
+
+<div id="emapp"></div>
+<script type="text/x-handlebars">
+  Ember:
+  <span id="emberMountNode">
+    {{#each EMapp.data}}<span>{{this}}</span>{{/each}}
+  </span>
+</script>
+
+
+<!-- React -->
+<div id="react">
+  React: <span id="reactMountNode"></span>
+</div>
+
+
+<!-- Mithril -->
+<div id="mithrilapp">
+  Mithril: <span id="mithrilMountNode"></span>
+</div>
+
+<!-- Steel -->
+<div id="steel">
+  Steel: <span id="steelMountNode"></span>
+</div>
+
+<script>
+var Ctrl = function($scope){ $scope.data = []; };
+
+var KOData = ko.observableArray();
+var KOviewmodel = {data: KOData};
+
+var ENV = {EXTEND_PROTOTYPES: false};
+
+var ReactComponent = React.createClass({displayName: 'PerfTest',
+  getInitialState: function() {
+    return { data: [] };
+  },
+  render: function() {
+    var res = [];
+    for(var i = 0; i < this.state.data.length; i++) {
+      res.push(React.DOM.span({ key: 'test' + i }, this.state.data[i]));
+    }
+    return React.DOM.span(null, res);
+  }
+});
+
+var MithrilData = new Array();
+var mithapp = {
+  controller: function() {
+    this.data = MithrilData;
+  },
+  view: function(ctrl) {
+    return m("span", [ctrl.data.map(function(datum) { return m('span', datum); })]);
+  }
+}
+
+$(document).ready(function() {
+//  angular.element(document).ready(function() {
+    var ang_scope = $('#angList').scope();
+
+    window.ANGclear = function(){
+      ang_scope.data.splice(0, ang_scope.data.length);
+      //ang_scope.$digest();
+    };
+    window.ANGpush = function(data){
+      ang_scope.data.push(data + ang_scope.data.length);
+      //ang_scope.$digest();
+    };
+ // });
+
+  ko.applyBindings(KOviewmodel, document.getElementById('koapp'));
+  window.KOclear = function (){
+    KOData.splice(0, KOData().length);
+  };
+  window.KOpush = function (data){
+    KOData.push(data);
+  };
+
+
+
+  EMapp = Ember.Application.create({
+    rootElement: '#emapp'
+  });
+  EMapp.data = Ember.A();
+
+  window.EMclear = function () {
+    EMapp.data.clear();
+  };
+  window.EMpush = function (data) {
+    EMapp.data.pushObject(data);
+  };
+
+
+  var reactComp = ReactComponent();
+  React.renderComponent(reactComp, document.getElementById('reactMountNode'));
+
+  window.RClear = function() {
+    reactComp.setState({data: []})
+  };
+
+  window.RPush = function(data) {
+    var stateData = reactComp.state.data;
+    stateData.push(data);
+    reactComp.setState({data: stateData});
+  }
+
+  m.module(document.getElementById("mithrilMountNode"), mithapp);
+  window.Mclear = function() {
+    m.startComputation();
+    MithrilData.splice(0);
+    m.endComputation();
+  };
+
+  window.Mpush = function(data) {
+    m.startComputation();
+    MithrilData.push(data);
+    m.endComputation();
+  }
+
+  //steel
+  var steelComp = new SteelPerfTest1();
+  steelComp.appendTo(document.getElementById('steelMountNode'));
+
+  window.Sclear = function(){
+	steelComp.clear();
+  }
+
+  window.Spush = function(data){
+	  steelComp.push(data);
+  }
+});
+</script>
+<script>
+function ExecReact(){
+	RClear();
+	for (var i = 0; i < 100; i++)
+  		RPush("ritem");
+}
+
+function ExecEmber(){
+	EMclear();
+	for (var i = 0; i < 100; i++)
+  		EMpush("ritem");
+}
+
+function ExecMithril(){
+	Mclear();
+	for (var i = 0; i < 100; i++)
+  		Mpush("ritem");
+}
+
+function ExecAngular(){
+	ANGclear();
+	for (var i = 0; i < 100; i++)
+		ANGpush("aitem");
+	var ang_scope = $('#angList').scope();
+	ang_scope.$digest()
+}
+
+function ExecSteel(){
+	Sclear();
+	for (var i = 0; i < 100; i++)
+  		Spush("sitem");
+}
+
+var execStack = [];
+
+function runStack(){
+	if (execStack.length == 0)
+		return;
+	var x = execStack.splice(0, 1)[0];
+	if (typeof x == "function"){
+		x();
+		runStack();
+		return;
+	}
+
+	if ($(x).html() != "") {
+		//console.info(x + "=" + $(x).html());
+		runStack();
+	}
+	else {
+		execStack.splice(0, 0, x);
+		setTimeout(runStack, 0);
+	}
+}
+
+function waitFor(elem){
+	execStack.push(elem);
+}
+
+function run(name, func, times, elem) {
+	execStack.push(function(){
+		window.start = new Date();
+	});
+
+	for(var i = 0; i < times; ++i) {
+		execStack.push(function(){
+			func();
+		});
+		waitFor(elem);
+	}
+
+	execStack.push(function(){
+		window.end = new Date();
+		console.info(name + "=" + (end.getTime()-start.getTime()) + " ms");
+	});
+}
+
+$(document).ready(function() {
+	run("React", ExecReact, 10, "#reactMountNode");
+	run("Ember", ExecEmber, 10, "#emberMountNode");
+	run("Mithril", ExecMithril, 10, "#mithrilMountNode>span");
+	run("Angular", ExecAngular, 10, "#angList");
+	run("Steel", ExecSteel, 10, "#steelMountNode>span");
+	runStack();
+});
+</script>
+</head>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-package org.steel.example;
+package org.steel.example.todo.list;
 
 import org.steel.css.CSSRule;
 
