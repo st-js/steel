@@ -13,13 +13,14 @@ import org.stjs.javascript.dom.Element;
 public class TodoItemView extends Tag<TodoItemView> {
 	@Template("property")
 	private TodoItem item;
+
 	private TodoItemCSS css;
 
 	public TodoItemView() {
 		super("li", new TodoItemCSS(".todo"));
+		Observables.model(this);
 		item = new TodoItem("", false);
 		css = (TodoItemCSS) getCssRule();
-		Observables.model(this);
 	}
 
 	public TodoItemView todo(TodoItem anItem) {
