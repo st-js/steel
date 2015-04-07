@@ -88,6 +88,21 @@ public class HTML {
 		return (T) new InputTag<T>("input", css);
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T extends InputTag<T>> T inputText(CSSRule css) {
+		return (T) input(css).type("text");
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends InputTag<T>> T inputCheckbox(CSSRule css) {
+		return (T) input(css).type("checkbox");
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends InputTag<T>> T inputRadio(CSSRule css) {
+		return (T) input(css).type("radio");
+	}
+
 	private static Array<Object> add(String param, Array<Object> args) {
 		Array<Object> ret = $array(param);
 

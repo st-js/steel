@@ -39,6 +39,7 @@ public class DynExpr<T> {
 		if (tracedFields.$get(key) != null) {
 			return;
 		}
+
 		if (tracedModels.$get(Observables.id(model)) == null) {
 			Observables.observe(model, modelModifiedCallback);
 			tracedModels.$put(Observables.id(model), model);

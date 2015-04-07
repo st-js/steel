@@ -20,6 +20,8 @@ public class CSSRule {
 	 */
 	public final Map<String, CSSRule> subrules;
 
+	public final Map<String, CSSStatus> statuses;
+
 	public String font;
 	public String width;
 	public String height;
@@ -56,38 +58,52 @@ public class CSSRule {
 	public String borderStyle;
 	public String borderWidth;
 	public String borderColor;
+	public String borderBottom;
 	public String lineHeight;
+	public String textDecoration;
+
+	public CSSStatus subruleStatus;
+
+	public String backgroundPosition;
+
+	public String margin;
+
+	public String listStyle;
+
+	public String fontWeight;
+
+	public String fontFamily;
+
+	public String outline;
+	public String borderRadius;
 
 	public CSSRule(String selector) {//
 		this.selector = selector;
 		this.name = selector.indexOf(".") == 0 ? selector.substring(1) : selector;
 		this.subrules = $map();
+		this.statuses = $map();
+	}
+
+	public native CSSStatus status(String statusName);
+
+	public CSSStatus status(String statusName, String statusGroup) {
+		CSSStatus status = statuses.$get(statusName);
+		if (status == null) {
+			status = new CSSStatus(this, statusName, statusGroup);
+			statuses.$put(statusName, status);
+		}
+		return status;
 	}
 
 	/**
 	 * @param subRuleName
 	 * @return a subrule with the given name (without the ".", or starting with ":" like ":hover")
 	 */
-	public native CSSRule when(String subRuleName);
-
-	public native CSSRule when(CSSRule setSubrule);
-
-	/**
-	 * @param subRuleName
-	 * @return a subrule with the given name (without the ".", or starting with ":" like ":hover")
-	 */
-	protected CSSRule when(Object subruleParam) {
-		CSSRule subrule;
-		if (subruleParam instanceof CSSRule) {
-			subrule = (CSSRule) subruleParam;
-			subrules.$put(subrule.name, subrule);
-		} else {
-			String subRuleName = (String) subruleParam;
-			subrule = subrules.$get(subRuleName);
-			if (subrule == null) {
-				subrule = createSubrule(subRuleName);
-				subrules.$put(subRuleName, subrule);
-			}
+	public CSSRule when(CSSStatus status) {
+		CSSRule subrule = subrules.$get("" + status.$id);
+		if (subrule == null) {
+			subrule = createSubrule(status);
+			subrules.$put("" + status.$id, subrule);
 		}
 		return subrule;
 	}
@@ -96,9 +112,11 @@ public class CSSRule {
 	 * @param subRuleName
 	 * @return a new subrule with the given name
 	 */
-	public CSSRule createSubrule(String subRuleName) {
-		String sel = subRuleName.startsWith(":") ? subRuleName : "." + subRuleName;
-		return new CSSRule(sel);
+	public CSSRule createSubrule(CSSStatus status) {
+		String sel = status.name.startsWith(":") ? status.name : "." + status.name;
+		CSSRule rule = new CSSRule(sel);
+		rule.subruleStatus = status;
+		return rule;
 	}
 
 	public static CSSRule div() {
@@ -153,28 +171,28 @@ public class CSSRule {
 		return transform.$invoke(val(value)) + "px";
 	}
 
-	public CSSRule active() {
-		return when(":active");
+	public CSSStatus active() {
+		return status(":active");
 	}
 
-	public CSSRule visited() {
-		return when(":visited");
+	public CSSStatus visited() {
+		return status(":visited");
 	}
 
-	public CSSRule hover() {
-		return when(":hover");
+	public CSSStatus hover() {
+		return status(":hover");
 	}
 
-	public CSSRule focus() {
-		return when(":focus");
+	public CSSStatus focus() {
+		return status(":focus");
 	}
 
-	public CSSRule before() {
-		return when(":before");
+	public CSSStatus before() {
+		return status(":before");
 	}
 
-	public CSSRule after() {
-		return when(":after");
+	public CSSStatus after() {
+		return status(":after");
 	}
 
 	/**
@@ -211,4 +229,5 @@ public class CSSRule {
 		}
 		return this;
 	}
+
 }

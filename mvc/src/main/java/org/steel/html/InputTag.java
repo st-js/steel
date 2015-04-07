@@ -2,11 +2,17 @@ package org.steel.html;
 
 import org.steel.css.CSSRule;
 import org.stjs.javascript.JSGlobal;
+import org.stjs.javascript.dom.Input;
 import org.stjs.javascript.functions.Function0;
 
 public class InputTag<T extends InputTag<T>> extends Tag<T> {
 	public InputTag(String tagName, CSSRule css) {
 		super(tagName, css);
+	}
+
+	@Override
+	public Input element() {
+		return (Input) super.element();
 	}
 
 	public T type(String value) {

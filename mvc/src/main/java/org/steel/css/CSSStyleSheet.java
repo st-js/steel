@@ -1,7 +1,10 @@
 package org.steel.css;
 
+import static org.stjs.javascript.Global.console;
 import static org.stjs.javascript.Global.window;
+import static org.stjs.javascript.JSCollections.$array;
 import static org.stjs.javascript.JSCollections.$map;
+import static org.stjs.javascript.JSGlobal.typeof;
 import static org.stjs.javascript.JSObjectAdapter.$properties;
 
 import org.stjs.javascript.Array;
@@ -18,12 +21,13 @@ public class CSSStyleSheet {
 	public void addRule(CSSRule cssRule) {
 		createStyleSheet();
 
-		addRuleWithPath("", cssRule, false);
+		addRuleWithPath($array(), cssRule, false);
 	}
 
-	public void addRuleWithPath(String parentSelector, CSSRule cssRule, boolean isSubRule) {
+	public void addRuleWithPath(Array<CSSRule> parentPath, CSSRule cssRule, boolean isSubRule) {
 		@SuppressWarnings("unchecked")
-		String selector = parentSelector + (isSubRule ? "" : " ") + cssRule.selector;
+		Array<CSSRule> path = parentPath.slice(0);
+		path.push(cssRule);
 
 		String rules = "";
 		for (String prop : $properties(cssRule)) {
@@ -38,24 +42,45 @@ public class CSSStyleSheet {
 				continue;
 			}
 			if (value instanceof CSSRule) {
-				addRuleWithPath(selector, (CSSRule) value, false);
+				addRuleWithPath(path, (CSSRule) value, false);
 				continue;
 			}
 
-			rules += dashed(prop) + ":" + value + ";";
+			if (typeof(value) == "string") {
+				rules += dashed(prop) + ":" + value + ";";
+			}
 		}
 		if (rules != "") {
-			addRuleAndSelector(selector, rules);
+			toDom(selector(path), rules);
 		}
 
 		//add the subrules
 		for (String r : cssRule.subrules) {
-			addRuleWithPath(selector, cssRule.subrules.$get(r), true);
+			addRuleWithPath(path, cssRule.subrules.$get(r), true);
 		}
 	}
 
-	private void addRuleAndSelector(String selector, String rules) {
-		//console.info("ADD:" + selector + "=", rules);
+	private String selector(Array<CSSRule> path) {
+		String selector = "";
+		for (int i = 0; i < path.$length(); ++i) {
+			CSSRule rule = path.$get(i);
+			if (rule.subruleStatus != null) {
+				continue;
+			}
+			String ruleSelector = rule.selector;
+			for (int j = i + 1; j < path.$length(); ++j) {
+				CSSRule relatedRule = path.$get(j);
+				if (relatedRule.subruleStatus != null && relatedRule.subruleStatus.rule == rule) {
+					ruleSelector += relatedRule.selector;
+				}
+			}
+			selector += " " + ruleSelector;
+		}
+		return selector;
+	}
+
+	private void toDom(String selector, String rules) {
+		console.info("ADD:" + selector + "=", rules);
 		if ($properties(stylesheet).$get("insertRule") != null) {
 			stylesheet.insertRule(selector + "{" + rules + "}", 0);
 		} else {

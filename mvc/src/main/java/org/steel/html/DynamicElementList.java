@@ -15,6 +15,7 @@ public class DynamicElementList<V> {
 	private final Function3<V, Integer, Array<V>, Tag<?>> eachItemCallback;
 	private final Function0<Tag<?>> emptyArrayCallback;
 	private Element container;
+	private Element emptyListChild;
 
 	public DynamicElementList(Array<V> array, Function3<V, Integer, Array<V>, Tag<?>> eachItemCallback, Function0<Tag<?>> emptyArrayCallback) {
 		this.array = array;
@@ -29,30 +30,58 @@ public class DynamicElementList<V> {
 		renderChildren(0, array.$length());
 	}
 
+	private void removeAllChildren() {
+		Node child;
+		do {
+			child = (Node) $properties(container).$get("firstChild");
+			if (child != null) {
+				container.removeChild(child);
+			}
+		}
+		while (child != null);
+	}
+
+	public void removeChildren(int from, int to) {
+		for (int i = from; i < to; i++) {
+			//TODO - mark down also the index
+			container.removeChild(container.childNodes.$get(i));
+			//TODO - stop observers!
+		}
+	}
+
 	public void renderChildren(int from, int to) {
 		if (array.$length() == 0) {
-			Node child;
-			do {
-				child = (Node) $properties(container).$get("firstChild");
+			removeAllChildren();
+
+			if (emptyArrayCallback != null) {
+				Tag<?> child = emptyArrayCallback.$invoke();
 				if (child != null) {
-					container.removeChild(child);
+					emptyListChild = child.element();
+					child.appendTo(container);
 				}
 			}
-			while (child != null);
-			if (emptyArrayCallback != null) {
-				emptyArrayCallback.$invoke().appendTo(container);
-			}
 			return;
+		}
+		if (emptyListChild != null) {
+			container.removeChild(emptyListChild);
+			emptyListChild = null;
 		}
 		//several elements
 		for (int i = from; i < to; i++) {
 			//TODO append to the right position
-			eachItemCallback.$invoke(array.$get(i), i, array).appendTo(container);
+			Tag<?> child = eachItemCallback.$invoke(array.$get(i), i, array);
+			if (child != null) {
+				child.appendTo(container);
+			}
 		}
 	}
 
 	private void arrayModified(Array<ArraySplice> splices) {
 		//TODO handle delete
-		splices.$forEach(splice -> renderChildren(splice.index, splice.index + splice.addedCount));
+		splices.$forEach(splice -> {
+			removeChildren(splice.index, splice.index + splice.removed.$length());
+			renderChildren(splice.index, splice.index + splice.addedCount);
+		});
 	}
+
 }

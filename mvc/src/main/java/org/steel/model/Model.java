@@ -25,7 +25,9 @@ public class Model {
 
 	public Object set(String field, Object value) {
 		$properties(target).$put(field, value);
-		observers.$forEach(obs -> obs.$invoke(target, field, value));
+		//copy this array as it may be modified by one of the listeners
+		Array<Callback3<Object, String, Object>> observersCopy = observers.slice(0);
+		observersCopy.$forEach(obs -> obs.$invoke(target, field, value));
 		return value;
 	}
 

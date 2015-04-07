@@ -28,6 +28,7 @@ public class DynamicAttribute {
 
 	public void setTo(Element anElement) {
 		this.element = anElement;
+		update();
 	}
 
 	public void update() {
