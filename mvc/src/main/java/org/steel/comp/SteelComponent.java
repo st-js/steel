@@ -1,4 +1,4 @@
-package org.steel.html;
+package org.steel.comp;
 
 import static org.stjs.javascript.Global.window;
 import static org.stjs.javascript.JSCollections.$castArray;
@@ -18,11 +18,11 @@ import org.stjs.javascript.functions.Function0;
 import org.stjs.javascript.functions.Function1;
 import org.stjs.javascript.functions.Function3;
 
-public class Tag<T extends Tag<T>> {
+public class SteelComponent<T extends SteelComponent<T>> {
 	public CSSRule cssRule;
-	private Element domElement;
+	protected Element domElement;
 
-	public Tag(String tagName, CSSRule css) {
+	public SteelComponent(String tagName, CSSRule css) {
 		domElement = window.document.createElement(tagName);
 		this.cssRule = css;
 		if (cssRule != null) {
@@ -64,14 +64,6 @@ public class Tag<T extends Tag<T>> {
 		return castThis();
 	}
 
-	public T id(String value) {
-		return attr("id", value);
-	}
-
-	public T $for(String value) {
-		return attr("for", value);
-	}
-
 	native public T text(String text);
 
 	native public T text(Function0<String> expr);
@@ -88,9 +80,10 @@ public class Tag<T extends Tag<T>> {
 		return castThis();
 	}
 
-	public native T html(Tag<?>... arguments);
+	public native T html(SteelComponent<?>... arguments);
 
-	public native <V> T html(Array<V> array, Function3<V, Integer, Array<V>, Tag<?>> eachItemCallback, Function0<Tag<?>> emptyArrayCallback);
+	public native <V> T html(Array<V> array, Function3<V, Integer, Array<V>, SteelComponent<?>> eachItemCallback,
+			Function0<SteelComponent<?>> emptyArrayCallback);
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	protected T html(Object... arguments) {
@@ -101,14 +94,15 @@ public class Tag<T extends Tag<T>> {
 		return staticHtml((Array) $castArray(arguments));
 	}
 
-	protected T staticHtml(Array<Tag<?>> tags) {
+	protected T staticHtml(Array<SteelComponent<?>> tags) {
 		for (int i = 0; i < tags.$length(); ++i) {
 			tags.$get(i).appendTo(domElement);
 		}
 		return castThis();
 	}
 
-	protected <V> T dynamicHtml(Array<V> array, Function3<V, Integer, Array<V>, Tag<?>> eachItemCallback, Function0<Tag<?>> emptyArrayCallback) {
+	protected <V> T dynamicHtml(Array<V> array, Function3<V, Integer, Array<V>, SteelComponent<?>> eachItemCallback,
+			Function0<SteelComponent<?>> emptyArrayCallback) {
 		DynamicElementList<V> dynList = new DynamicElementList<V>(array, eachItemCallback, emptyArrayCallback);
 		dynList.appendTo(domElement);
 		return castThis();
@@ -126,62 +120,6 @@ public class Tag<T extends Tag<T>> {
 	protected T event(String name, CallbackOrFunction handler) {
 		$properties(domElement).$put(name, handler);
 		return castThis();
-	}
-
-	public native T onchange(Function1<DOMEvent, Boolean> handler);
-
-	public native T onchange(Callback0 handler);
-
-	protected T onchange(CallbackOrFunction handler) {
-		return event("onchange", handler);
-	}
-
-	public native T onblur(Function1<DOMEvent, Boolean> handler);
-
-	public native T onblur(Callback0 handler);
-
-	protected T onblur(CallbackOrFunction handler) {
-		return event("onblur", handler);
-	}
-
-	public native T onclick(Function1<DOMEvent, Boolean> handler);
-
-	public native T onclick(Callback0 handler);
-
-	protected T onclick(CallbackOrFunction handler) {
-		return event("onclick", handler);
-	}
-
-	public native T ondblclick(Function1<DOMEvent, Boolean> handler);
-
-	public native T ondblclick(Callback0 handler);
-
-	protected T ondblclick(CallbackOrFunction handler) {
-		return event("ondblclick", handler);
-	}
-
-	public native T onkeypress(Function1<DOMEvent, Boolean> handler);
-
-	public native T onkeypress(Callback0 handler);
-
-	protected T onkeypress(CallbackOrFunction handler) {
-		return event("onkeypress", handler);
-	}
-
-	public native T onkeydown(Function1<DOMEvent, Boolean> handler);
-
-	public native T onkeydown(Callback0 handler);
-
-	protected T onkeydown(CallbackOrFunction handler) {
-		return event("onkeydown", handler);
-	}
-
-	public native T onkeyup(Function1<DOMEvent, Boolean> handler);
-
-	public native T onkeyup(Callback0 handler);
-
-	protected T onkeyup(CallbackOrFunction handler) {
-		return event("onkeyup", handler);
 	}
 
 }

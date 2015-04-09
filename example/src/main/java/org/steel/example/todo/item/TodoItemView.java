@@ -7,14 +7,14 @@ import static org.steel.html.HTML.inputText;
 import static org.steel.html.HTML.label;
 
 import org.steel.html.InputTag;
-import org.steel.html.Tag;
+import org.steel.html.HTMLTag;
 import org.steel.model.Observables;
 import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.dom.DOMEvent;
 import org.stjs.javascript.dom.Element;
 import org.stjs.javascript.functions.Callback1;
 
-public class TodoItemView extends Tag<TodoItemView> {
+public class TodoItemView extends HTMLTag<TodoItemView> {
 	@Template("property")
 	private TodoItem item;
 

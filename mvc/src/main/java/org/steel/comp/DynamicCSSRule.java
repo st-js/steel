@@ -1,4 +1,4 @@
-package org.steel.html;
+package org.steel.comp;
 
 import org.steel.css.CSSStatus;
 import org.steel.model.DynExpr;

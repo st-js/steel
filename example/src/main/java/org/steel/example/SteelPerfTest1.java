@@ -4,11 +4,11 @@ import static org.steel.html.HTML.span;
 import static org.stjs.javascript.JSCollections.$array;
 
 import org.steel.css.CSSRule;
-import org.steel.html.Tag;
+import org.steel.html.HTMLTag;
 import org.stjs.javascript.Array;
 import org.stjs.javascript.dom.Element;
 
-public class SteelPerfTest1 extends Tag<SteelPerfTest1> {
+public class SteelPerfTest1 extends HTMLTag<SteelPerfTest1> {
 	private final Array<String> data;
 
 	public SteelPerfTest1(CSSRule css) {

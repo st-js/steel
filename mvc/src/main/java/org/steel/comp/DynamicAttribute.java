@@ -1,4 +1,4 @@
-package org.steel.html;
+package org.steel.comp;
 
 import static org.stjs.javascript.JSObjectAdapter.$properties;
 

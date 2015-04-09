@@ -14,67 +14,67 @@ public class HTML {
 	 * @param arguments
 	 * @return
 	 */
-	public static <T extends Tag<T>> T div(CSSRule css) {
+	public static <T extends HTMLTag<T>> T div(CSSRule css) {
 		return tag("div", css);
 	}
 
-	public static <T extends Tag<T>> T p(CSSRule css) {
+	public static <T extends HTMLTag<T>> T p(CSSRule css) {
 		return tag("p", css);
 	}
 
-	public static <T extends Tag<T>> T span(CSSRule css) {
+	public static <T extends HTMLTag<T>> T span(CSSRule css) {
 		return tag("span", css);
 	}
 
-	public static <T extends Tag<T>> T header(CSSRule css) {
+	public static <T extends HTMLTag<T>> T header(CSSRule css) {
 		return tag("header", css);
 	}
 
-	public static <T extends Tag<T>> T section(CSSRule css) {
+	public static <T extends HTMLTag<T>> T section(CSSRule css) {
 		return tag("section", css);
 	}
 
-	public static <T extends Tag<T>> T footer(CSSRule css) {
+	public static <T extends HTMLTag<T>> T footer(CSSRule css) {
 		return tag("footer", css);
 	}
 
-	public static <T extends Tag<T>> T label(CSSRule css) {
+	public static <T extends HTMLTag<T>> T label(CSSRule css) {
 		return tag("label", css);
 	}
 
-	public static <T extends Tag<T>> T ul(CSSRule css) {
+	public static <T extends HTMLTag<T>> T ul(CSSRule css) {
 		return tag("ul", css);
 	}
 
-	public static <T extends Tag<T>> T ol(CSSRule css) {
+	public static <T extends HTMLTag<T>> T ol(CSSRule css) {
 		return tag("ol", css);
 	}
 
-	public static <T extends Tag<T>> T li(CSSRule css) {
+	public static <T extends HTMLTag<T>> T li(CSSRule css) {
 		return tag("li", css);
 	}
 
-	public static <T extends Tag<T>> T h1(CSSRule css) {
+	public static <T extends HTMLTag<T>> T h1(CSSRule css) {
 		return tag("h1", css);
 	}
 
-	public static <T extends Tag<T>> T h2(CSSRule css) {
+	public static <T extends HTMLTag<T>> T h2(CSSRule css) {
 		return tag("h2", css);
 	}
 
-	public static <T extends Tag<T>> T h3(CSSRule css) {
+	public static <T extends HTMLTag<T>> T h3(CSSRule css) {
 		return tag("h3", css);
 	}
 
-	public static <T extends Tag<T>> T h4(CSSRule css) {
+	public static <T extends HTMLTag<T>> T h4(CSSRule css) {
 		return tag("h4", css);
 	}
 
-	public static <T extends Tag<T>> T h5(CSSRule css) {
+	public static <T extends HTMLTag<T>> T h5(CSSRule css) {
 		return tag("h5", css);
 	}
 
-	public static <T extends Tag<T>> T h6(CSSRule css) {
+	public static <T extends HTMLTag<T>> T h6(CSSRule css) {
 		return tag("h6", css);
 	}
 
@@ -118,21 +118,8 @@ public class HTML {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Tag<T>> T tag(String tagName, CSSRule css) {
-		return (T) new Tag<T>(tagName, css);
-		//console.info("TAG", args);
-		//		Tag tag = new Tag(tagName);
-		//		for (int i = 0; i < args.$length(); ++i) {
-		//			Object arg = args.$get(i);
-		//			if (arg instanceof Tag) {
-		//				tag.tag((Tag) arg);
-		//			} else if (arg instanceof DynExpr) {
-		//				tag.expr((DynExpr<?>) arg);
-		//			} else {
-		//				tag.text((String) arg);
-		//			}
-		//		}
-		//		return tag;
+	public static <T extends HTMLTag<T>> T tag(String tagName, CSSRule css) {
+		return (T) new HTMLTag<T>(tagName, css);
 	}
 
 }

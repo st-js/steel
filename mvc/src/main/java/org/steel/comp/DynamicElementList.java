@@ -1,4 +1,4 @@
-package org.steel.html;
+package org.steel.comp;
 
 import static org.stjs.javascript.JSObjectAdapter.$properties;
 
@@ -12,12 +12,13 @@ import org.stjs.javascript.functions.Function3;
 
 public class DynamicElementList<V> {
 	private final Array<V> array;
-	private final Function3<V, Integer, Array<V>, Tag<?>> eachItemCallback;
-	private final Function0<Tag<?>> emptyArrayCallback;
+	private final Function3<V, Integer, Array<V>, SteelComponent<?>> eachItemCallback;
+	private final Function0<SteelComponent<?>> emptyArrayCallback;
 	private Element container;
 	private Element emptyListChild;
 
-	public DynamicElementList(Array<V> array, Function3<V, Integer, Array<V>, Tag<?>> eachItemCallback, Function0<Tag<?>> emptyArrayCallback) {
+	public DynamicElementList(Array<V> array, Function3<V, Integer, Array<V>, SteelComponent<?>> eachItemCallback,
+			Function0<SteelComponent<?>> emptyArrayCallback) {
 		this.array = array;
 		this.eachItemCallback = eachItemCallback;
 		this.emptyArrayCallback = emptyArrayCallback;
@@ -54,7 +55,7 @@ public class DynamicElementList<V> {
 			removeAllChildren();
 
 			if (emptyArrayCallback != null) {
-				Tag<?> child = emptyArrayCallback.$invoke();
+				SteelComponent<?> child = emptyArrayCallback.$invoke();
 				if (child != null) {
 					emptyListChild = child.element();
 					child.appendTo(container);
@@ -69,7 +70,7 @@ public class DynamicElementList<V> {
 		//several elements
 		for (int i = from; i < to; i++) {
 			//TODO append to the right position
-			Tag<?> child = eachItemCallback.$invoke(array.$get(i), i, array);
+			SteelComponent<?> child = eachItemCallback.$invoke(array.$get(i), i, array);
 			if (child != null) {
 				child.appendTo(container);
 			}
@@ -77,7 +78,6 @@ public class DynamicElementList<V> {
 	}
 
 	private void arrayModified(Array<ArraySplice> splices) {
-		//TODO handle delete
 		splices.$forEach(splice -> {
 			removeChildren(splice.index, splice.index + splice.removed.$length());
 			renderChildren(splice.index, splice.index + splice.addedCount);

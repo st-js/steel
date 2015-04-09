@@ -15,13 +15,13 @@ import static org.stjs.javascript.JSCollections.$array;
 
 import org.steel.example.todo.item.TodoItem;
 import org.steel.example.todo.item.TodoItemView;
-import org.steel.html.Tag;
+import org.steel.html.HTMLTag;
 import org.stjs.javascript.Array;
 import org.stjs.javascript.dom.DOMEvent;
 import org.stjs.javascript.dom.Element;
 import org.stjs.javascript.dom.Input;
 
-public class TodoListView extends Tag<TodoListView> {
+public class TodoListView extends HTMLTag<TodoListView> {
 	private final Array<TodoItem> todos;
 
 	private TodoListCSS css;
@@ -45,7 +45,7 @@ public class TodoListView extends Tag<TodoListView> {
 				h1(css.title).text("todo"), //
 				inputText(css.newTodo).placeholder("What needs to be done?").onchange(this::onNewTodo)),//
 			section(null).html(
-				inputCheckbox(null),
+				inputCheckbox(null).id("toggle-all").onclick(this::onToggleAll),
 				label(null).$for("toggle-all").text("Mark all as complete"),
 				ul(css.itemList).html(todos, (todo, index, array) -> new TodoItemView(css.item).todo(todo).ondelete(this::onDeleteItem), () -> li(null).text("No todo"))),//
 			footer(null).html(//
@@ -56,12 +56,24 @@ public class TodoListView extends Tag<TodoListView> {
 	}
 
 	protected int completed() {
-		return todos.$length();
+		int completed = 0;
+		for (int i = 0; i < todos.$length(); ++i) {
+			if (todos.$get(i).done) {
+				completed++;
+			}
+		}
+		return completed;
 	}
 
 	private boolean onNewTodo(DOMEvent ev) {
 		addItem(new TodoItem(((Input) ev.target).value, false));
 		return false;
+	}
+
+	private boolean onToggleAll(DOMEvent ev) {
+		boolean checked = ((Input) ev.target).checked;
+		todos.$forEach(item -> item.done = checked);
+		return true;
 	}
 
 	private void onDeleteItem(TodoItem item) {
