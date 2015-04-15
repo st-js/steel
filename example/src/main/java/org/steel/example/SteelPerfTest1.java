@@ -12,7 +12,8 @@ public class SteelPerfTest1 extends HTMLTag<SteelPerfTest1> {
 	private final Array<String> data;
 
 	public SteelPerfTest1(CSSRule css) {
-		super("span", css);
+		super("span");
+		css(css);
 		data = $array();
 	}
 
@@ -27,7 +28,7 @@ public class SteelPerfTest1 extends HTMLTag<SteelPerfTest1> {
 	@Override
 	public SteelPerfTest1 appendTo(Element container) {
 		html(//
-			data, (item, index, array) -> span(null).text(item), null//
+			data, (item, index, array) -> span().text(item), null//
 		);
 		return super.appendTo(container);
 	}

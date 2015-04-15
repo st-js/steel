@@ -22,12 +22,8 @@ public class SteelComponent<T extends SteelComponent<T>> {
 	public CSSRule cssRule;
 	protected Element domElement;
 
-	public SteelComponent(String tagName, CSSRule css) {
+	public SteelComponent(String tagName) {
 		domElement = window.document.createElement(tagName);
-		this.cssRule = css;
-		if (cssRule != null) {
-			domElement.className = cssRule.name;
-		}
 	}
 
 	public Element element() {
@@ -38,7 +34,29 @@ public class SteelComponent<T extends SteelComponent<T>> {
 		return cssRule;
 	}
 
-	public T rule(CSSStatus rule, Function0<Boolean> activate) {
+	public native T css(CSSRule css);
+
+	public native T css(CSSStatus rule, Function0<Boolean> activate);
+
+	private T css(Object param1, Object param2) {
+		if (param1 == null) {
+			return castThis();
+		}
+		if (param1 instanceof CSSRule) {
+			return internalCss1((CSSRule) param1);
+		}
+		return internalCss2((CSSStatus) param1, (Function0<Boolean>) param2);
+	}
+
+	private T internalCss1(CSSRule css) {
+		this.cssRule = css;
+		if (cssRule != null) {
+			domElement.className = cssRule.name;
+		}
+		return castThis();
+	}
+
+	private T internalCss2(CSSStatus rule, Function0<Boolean> activate) {
 		DynamicCSSRule dynRule = new DynamicCSSRule(rule, DynExpr.of(activate));
 		dynRule.setTo(domElement);
 		return castThis();
@@ -91,7 +109,8 @@ public class SteelComponent<T extends SteelComponent<T>> {
 		if (args.$length() == 3 && JSGlobal.typeof(args.$get(1)) == "function") {
 			return (T) dynamicHtml((Array) args.$get(0), (Function3) args.$get(1), (Function0) args.$get(2));
 		}
-		return staticHtml((Array) $castArray(arguments));
+		Object ret = staticHtml((Array) args);
+		return (T) ret;
 	}
 
 	protected T staticHtml(Array<SteelComponent<?>> tags) {

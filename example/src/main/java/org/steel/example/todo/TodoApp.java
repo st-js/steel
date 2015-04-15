@@ -10,7 +10,7 @@ public class TodoApp {
 		CSSStyleSheet stylesheet = new CSSStyleSheet();
 		TodoAppCSS css = new TodoAppCSS();
 		stylesheet.addRule(css);
-		new TodoListView(css.list).appendTo(container);
+		new TodoListView().css(css.list).appendTo(container);
 	}
 
 }

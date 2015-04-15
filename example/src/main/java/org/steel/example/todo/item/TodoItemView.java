@@ -6,8 +6,8 @@ import static org.steel.html.HTML.inputCheckbox;
 import static org.steel.html.HTML.inputText;
 import static org.steel.html.HTML.label;
 
-import org.steel.html.InputTag;
 import org.steel.html.HTMLTag;
+import org.steel.html.InputTag;
 import org.steel.model.Observables;
 import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.dom.DOMEvent;
@@ -18,8 +18,6 @@ public class TodoItemView extends HTMLTag<TodoItemView> {
 	@Template("property")
 	private TodoItem item;
 
-	private TodoItemCSS css;
-
 	private InputTag<?> input;
 
 	@Template("property")
@@ -27,12 +25,11 @@ public class TodoItemView extends HTMLTag<TodoItemView> {
 
 	private Callback1<TodoItem> ondeleteHandler;
 
-	public TodoItemView(TodoItemCSS myCss) {
-		super("li", myCss);
+	public TodoItemView() {
+		super("li");
 		Observables.model(this);
 
 		item = new TodoItem("", false);
-		css = myCss;
 		editMode = false;
 	}
 
@@ -43,14 +40,17 @@ public class TodoItemView extends HTMLTag<TodoItemView> {
 
 	@Override
 	public TodoItemView appendTo(Element container) {
+		TodoItemCSS css = (TodoItemCSS) getCssRule();
 		// @formatter:off
-		rule(css.editing, () -> editMode).rule(css.done, () -> item.done);
+		css(css.editing, () -> editMode);
+		css(css.done, () -> item.done);
+
 		html(
-			div(css.view).html(
-				inputCheckbox(css.toggle).checked(()->item.done).onclick(this::toggleDone), //
-				label(css.label).text(() -> item.task).ondblclick(this::edit),//
-				a(css.destroy).onclick(this::clear)),
-			input = inputText(css.edit).value(() -> item.task).onblur(this::closeEdit).onkeypress(this::updateOnEnter));
+			div().css(css.view).html(
+				inputCheckbox().css(css.toggle).checked(()->item.done).onclick(this::toggleDone), //
+				label().css(css.label).text(() -> item.task).ondblclick(this::edit),//
+				a().css(css.destroy).onclick(this::clear)),
+			input = inputText().css(css.edit).value(() -> item.task).onblur(this::closeEdit).onkeypress(this::updateOnEnter));
 		return super.appendTo(container);
 		// @formatter:on
 	}

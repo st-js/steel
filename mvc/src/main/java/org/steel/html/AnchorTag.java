@@ -1,10 +1,9 @@
 package org.steel.html;
 
-import org.steel.css.CSSRule;
 
 public class AnchorTag<T extends AnchorTag<T>> extends HTMLTag<T> {
-	public AnchorTag(String tagName, CSSRule css) {
-		super(tagName, css);
+	public AnchorTag(String tagName) {
+		super(tagName);
 	}
 
 	public T href(String value) {

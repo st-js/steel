@@ -1,15 +1,14 @@
 package org.steel.html;
 
 import org.steel.comp.SteelComponent;
-import org.steel.css.CSSRule;
 import org.stjs.javascript.dom.DOMEvent;
 import org.stjs.javascript.functions.Callback0;
 import org.stjs.javascript.functions.CallbackOrFunction;
 import org.stjs.javascript.functions.Function1;
 
 public class HTMLTag<T extends HTMLTag<T>> extends SteelComponent<T> {
-	public HTMLTag(String tagName, CSSRule css) {
-		super(tagName, css);
+	public HTMLTag(String tagName) {
+		super(tagName);
 	}
 
 	public T id(String value) {

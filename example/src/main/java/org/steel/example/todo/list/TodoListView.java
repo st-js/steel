@@ -24,12 +24,9 @@ import org.stjs.javascript.dom.Input;
 public class TodoListView extends HTMLTag<TodoListView> {
 	private final Array<TodoItem> todos;
 
-	private TodoListCSS css;
-
-	public TodoListView(TodoListCSS myCss) {
-		super("div", myCss);
+	public TodoListView() {
+		super("div");
 		todos = $array();
-		css = myCss;
 	}
 
 	public TodoListView addItem(TodoItem item) {
@@ -39,18 +36,19 @@ public class TodoListView extends HTMLTag<TodoListView> {
 
 	@Override
 	public TodoListView appendTo(Element container) {
+		TodoListCSS css = (TodoListCSS) getCssRule();
 		// @formatter:off
 		html(
-			header(css.header).html(
-				h1(css.title).text("todo"), //
-				inputText(css.newTodo).placeholder("What needs to be done?").onchange(this::onNewTodo)),//
-			section(null).html(
-				inputCheckbox(null).id("toggle-all").onclick(this::onToggleAll),
-				label(null).$for("toggle-all").text("Mark all as complete"),
-				ul(css.itemList).html(todos, (todo, index, array) -> new TodoItemView(css.item).todo(todo).ondelete(this::onDeleteItem), () -> li(null).text("No todo"))),//
-			footer(null).html(//
-				a(null).text("Clear completed"), //
-				div(null).text(() -> "" + completed())));
+			header().css(css.header).html(
+				h1().css(css.title).text("todo"), //
+				inputText().css(css.newTodo).placeholder("What needs to be done?").onchange(this::onNewTodo)),//
+			section().html(
+				inputCheckbox().id("toggle-all").onclick(this::onToggleAll),
+				label().$for("toggle-all").text("Mark all as complete"),
+				ul().css(css.itemList).html(todos, (todo, index, array) -> new TodoItemView().css(css.item).todo(todo).ondelete(this::onDeleteItem), () -> li().text("No todo"))),//
+			footer().html(//
+				a().text("Clear completed"), //
+				div().text(() -> "" + completed())));
 		return super.appendTo(container);
 		// @formatter:on
 	}
