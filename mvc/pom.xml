@@ -29,6 +29,14 @@
 			<artifactId>jquery</artifactId>
 			<version>1.9.1.bv3</version>
 		</dependency>
+
+		<!-- TEST -->
+		<dependency>
+			<groupId>org.st-js</groupId>
+			<artifactId>test-helper</artifactId>
+			<version>${stjs.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,6 +1,6 @@
 package org.steel.example;
 
-import org.steel.model.Observables;
+import org.steel.model.Model;
 import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.jquery.JQueryCore;
 
@@ -18,7 +18,7 @@ public class MyTestComponent {
 	public int counter = 0;
 
 	public MyTestComponent() {
-		Observables.model(this);
+		Model.model(this);
 	}
 
 	public String name() {

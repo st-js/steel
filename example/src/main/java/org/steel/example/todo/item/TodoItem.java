@@ -1,6 +1,6 @@
 package org.steel.example.todo.item;
 
-import org.steel.model.Observables;
+import org.steel.model.Model;
 import org.stjs.javascript.annotation.Template;
 
 public class TodoItem {
@@ -11,7 +11,7 @@ public class TodoItem {
 	public boolean done;
 
 	public TodoItem(String task, boolean done) {
-		Observables.model(this);
+		Model.model(this);
 		this.task = task;
 		this.done = done;
 	}

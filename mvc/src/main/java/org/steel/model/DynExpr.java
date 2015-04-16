@@ -27,28 +27,28 @@ public class DynExpr<T> {
 
 	public T value() {
 		for (String key : tracedModels) {
-			Observables.unobserve(tracedModels.$get(key), modelModifiedCallback);
+			Model.unobserve(tracedModels.$get(key), modelModifiedCallback);
 		}
 		tracedFields = $map();
 		tracedModels = $map();
-		return Observables.trace(this::trace, expr);
+		return Model.trace(this::trace, expr);
 	}
 
 	private void trace(Object model, String field) {
-		String key = Observables.id(model) + ":" + field;
+		String key = Model.id(model) + ":" + field;
 		if (tracedFields.$get(key) != null) {
 			return;
 		}
 
-		if (tracedModels.$get(Observables.id(model)) == null) {
-			Observables.observe(model, modelModifiedCallback);
-			tracedModels.$put(Observables.id(model), model);
+		if (tracedModels.$get(Model.id(model)) == null) {
+			Model.observe(model, modelModifiedCallback);
+			tracedModels.$put(Model.id(model), model);
 		}
 		tracedFields.$put(key, model);
 	}
 
 	private void onModelModified(Object model, String field, Object value) {
-		String key = Observables.id(model) + ":" + field;
+		String key = Model.id(model) + ":" + field;
 		if (tracedFields.$get(key) == null) {
 			return;
 		}

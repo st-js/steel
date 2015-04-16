@@ -8,7 +8,7 @@ import static org.steel.html.HTML.label;
 
 import org.steel.html.HTMLTag;
 import org.steel.html.InputTag;
-import org.steel.model.Observables;
+import org.steel.model.Model;
 import org.stjs.javascript.annotation.Template;
 import org.stjs.javascript.dom.DOMEvent;
 import org.stjs.javascript.dom.Element;
@@ -27,7 +27,7 @@ public class TodoItemView extends HTMLTag<TodoItemView> {
 
 	public TodoItemView() {
 		super("li");
-		Observables.model(this);
+		Model.model(this);
 
 		item = new TodoItem("", false);
 		editMode = false;
